@@ -1,10 +1,10 @@
 package routers
 
 import (
-	"shadowsocks-cms/controllers"
 	"github.com/astaxie/beego"
+	"github.com/cheneylew/shadowsocks-cms/controllers"
 )
 
 func init() {
-    beego.Router("/", &controllers.MainController{})
+	beego.Router("/", &controllers.MainController{})
 }
