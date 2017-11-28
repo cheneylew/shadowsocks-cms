@@ -2,38 +2,36 @@ package controllers
 
 import (
 	"github.com/astaxie/beego"
+	"github.com/cheneylew/shadowsocks-cms/conf"
 )
 
 type MainController struct {
 	beego.Controller
 }
 
-func (c *MainController) Get() {
-	c.Data["Website"] = "beego.me"
-	c.Data["Email"] = "astaxie@gmail.com"
-	c.TplName = "user.html"
+func (c *MainController) Prepare() {
+	c.Controller.Prepare()
+	c.Data["Website"] = conf.MY_APP_CONFIG.SiteName
+	c.Data["Email"] = conf.MY_APP_CONFIG.Email
 
 	c.Layout = "layout.html"
+}
+
+func (c *MainController) s() {
+	c.TplName = "user_login.html"
+}
+
+func (c *MainController) Get() {
 	c.TplName = "user_login.html"
 }
 
 // @router /user/login/ [get]
 func (c *MainController) UserLogin() {
-	c.Data["Website"] = "beego.me"
-	c.Data["Email"] = "astaxie@gmail.com"
-	c.TplName = "user.html"
-
-	c.Layout = "layout.html"
 	c.TplName = "user_login.html"
 }
 
 // @router /user/regist/ [get]
 func (c *MainController) UserRegist() {
-	c.Data["Website"] = "beego.me"
-	c.Data["Email"] = "astaxie@gmail.com"
-	c.TplName = "user.html"
-
-	c.Layout = "layout.html"
 	c.TplName = "user_regist.html"
 }
 
