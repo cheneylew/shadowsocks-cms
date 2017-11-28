@@ -1,11 +1,10 @@
 package main
 
 import (
-	_ "shadowsocks-cms/routers"
 	"github.com/astaxie/beego"
+	_ "github.com/cheneylew/shadowsocks-cms/routers"
 )
 
 func main() {
 	beego.Run()
 }
-
