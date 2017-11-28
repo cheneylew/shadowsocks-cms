@@ -17,8 +17,8 @@ func (c *MainController) Prepare() {
 	c.Layout = "layout.html"
 }
 
-func (c *MainController) s() {
-	c.TplName = "user_login.html"
+func (c *MainController) Finish() {
+	c.Controller.Finish()
 }
 
 func (c *MainController) Get() {
