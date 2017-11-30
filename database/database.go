@@ -15,14 +15,22 @@ func init() {
 	url := dbUrl("cheneylew","12344321","47.91.151.207","3308","shadowsocks-servers")
 	utils.JJKPrintln(url)
 	orm.RegisterDriver("mysql", orm.DRMySQL)
-	orm.RegisterDataBase("default", "mysql", url)
+	err := orm.RegisterDataBase("default", "mysql", url)
+	o = orm.NewOrm()
+
+	if err != nil {
+		utils.JJKPrintln("========database can't connect! error:" + err.Error()+"========")
+	} else {
+		utils.JJKPrintln("========database connected success！========")
+	}
+
 }
 
 func dbUrl(user, password, host, port, dbName string) string {
 	return fmt.Sprintf(`%s:%s@tcp(%s:%s)/%s?charset=utf8`, user, password, host, port, dbName)
 }
 
-func dbQueryServers(ip string) []*models.Server {
+func DBQueryServers(ip string) []*models.Server {
 	var objects []*models.Server
 
 	qs := o.QueryTable("server")
@@ -35,7 +43,7 @@ func dbQueryServers(ip string) []*models.Server {
 	return objects
 }
 
-func dbQueryPortsWithSid(sid int64) []*models.Port {
+func DBQueryPortsWithSid(sid int64) []*models.Port {
 	var objects []*models.Port
 
 	qs := o.QueryTable("port")
@@ -48,7 +56,7 @@ func dbQueryPortsWithSid(sid int64) []*models.Port {
 	return objects
 }
 
-func dbQueryPortsWithIP(ip string) []*models.Port {
+func DBQueryPortsWithIP(ip string) []*models.Port {
 	var objects []*models.Port
 
 	qs := o.QueryTable("port")
@@ -61,7 +69,7 @@ func dbQueryPortsWithIP(ip string) []*models.Port {
 	return objects
 }
 
-func dbQueryUsersWithUid(uid int64) []*models.User {
+func DBQueryUsersWithUid(uid int64) []*models.User {
 	var objects []*models.User
 	qs := o.QueryTable("user")
 	_, err := qs.Filter("user_id", uid).All(&objects)
@@ -73,9 +81,20 @@ func dbQueryUsersWithUid(uid int64) []*models.User {
 	return objects
 }
 
-func dbQueryMyListenPorts() []*models.Port {
+func DBQueryUserWithEmailOrMobile(emailOrMobile string) []models.User {
+	var objects []models.User
+	_, err := o.Raw(fmt.Sprintf("select * from user where email =? or mobile=?"),emailOrMobile, emailOrMobile).QueryRows(&objects)
+	if err != nil {
+		utils.JJKPrintln(err)
+		return objects
+	}
+
+	return objects
+}
+
+func DBQueryMyListenPorts() []*models.Port {
 	curIp, _ := utils.ExtranetIP()
-	ports := dbQueryPortsWithIP(curIp)
+	ports := DBQueryPortsWithIP(curIp)
 
 	var filterPorts []*models.Port
 	for _, port := range ports {

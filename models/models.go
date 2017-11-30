@@ -3,6 +3,7 @@ package models
 import (
 	"github.com/astaxie/beego/orm"
 	"time"
+	"github.com/cheneylew/goutil/utils"
 )
 
 type Server struct {
@@ -33,8 +34,10 @@ type User struct {
 	Mobile string
 	Refer string
 	Comment string
+	Password string
 }
 
 func init() {
+	utils.JJKPrintln("========regist model=======")
 	orm.RegisterModel(new(User), new(Server), new(Port))
 }
