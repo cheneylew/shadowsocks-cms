@@ -6,5 +6,6 @@ import (
 )
 
 func main() {
+	InitTemplateFuncs()
 	beego.Run()
 }

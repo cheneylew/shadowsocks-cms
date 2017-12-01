@@ -6,6 +6,6 @@ type APP_CONFIG struct {
 }
 
 var MY_APP_CONFIG APP_CONFIG = APP_CONFIG{
-	SiteName:"SS",
+	SiteName:"流量统计",
 	Email:"cheneylew@163.com",
 }

@@ -4,6 +4,7 @@ import (
 	"github.com/cheneylew/goutil/utils"
 	"github.com/cheneylew/shadowsocks-cms/database"
 	"github.com/cheneylew/shadowsocks-cms/models"
+	"time"
 )
 
 type UserController struct {
@@ -51,14 +52,27 @@ func (c *UserController) Regist() {
 	c.TplName = "user_regist.html"
 }
 
-func (c *UserController) Home() {
-	c.TplName = "user_home.html"
-	utils.JJKPrintln(c.Data["User"])
-}
-
 func (c *UserController) Logout() {
 	c.SetUserLogout()
 	c.RedirectWithURL("/user/login")
 }
+
+func (c *UserController) Home() {
+	c.TplName = "user_home.html"
+
+	utils.JJKPrintln()
+	ports := database.DBQueryPortsWithUserId(c.GetLoginedUser().User_id)
+	for i := 0; i < len(ports); i++ {
+		ports[i].Flow_surplus = ports[i].Flow_in_max - ports[i].Flow_in
+		days := float64(ports[i].End_time.UTC().Unix()-time.Now().UTC().Unix())/(float64(24*60*60))
+		if days > 0 {
+			ports[i].Days_surplus = days
+		} else {
+			ports[i].Days_surplus = 0
+		}
+	}
+	c.Data["Ports"] = ports
+}
+
 
 

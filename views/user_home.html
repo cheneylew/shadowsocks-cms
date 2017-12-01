@@ -1,2 +1,24 @@
-<h3>用户中心 {{.User.Name}}</h3>
-<h5><a href="/user/logout">退出</a></h5>
+<h3>用户中心</h3>
+<div>用户名：{{.User.Name}} <a href="/user/logout">退出</a></div>
+
+<br/>
+您的服务器：<br/>
+<div class="table-responsive">
+    <table class="table">
+        {{range .Ports}}
+        <tr><td>
+            计费方式:
+            {{if compare .Ptype 1}}
+            按流量计费 <br/>用量: 已使用:{{.Flow_in | flow}} 最大值:{{.Flow_in_max | flow}} 剩余:{{.Flow_surplus | flow}}
+            {{else}}
+            包年包月 <br/>时间段: 开始:{{dateformat .Start_time "2006-01-02"}} 截止:{{dateformat .End_time "2006-01-02"}} 剩余:{{fmt .Days_surplus "%.2f"}}天
+            {{end}}
+            <br/>
+            IP:{{.Server.Ip}} <br/>
+            端口:{{.Port}} <br/>
+            密码:{{.Password}} <br/>
+        </td></tr>
+        {{end}}
+
+    </table>
+</div>

@@ -25,6 +25,9 @@ type Port struct {
 	Start_time time.Time
 	End_time time.Time
 	Sync_time time.Time
+
+	Flow_surplus float64 `orm:"-"`	//剩余流量
+	Days_surplus float64 `orm:"-"`	//剩余天数
 }
 
 type User struct {

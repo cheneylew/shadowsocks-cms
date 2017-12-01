@@ -31,7 +31,6 @@ func (c *BaseController) Prepare() {
 		if c.IsLogin() {
 			user := c.GetLoginedUser()
 			c.Data["User"] = user
-			utils.JJKPrintln(user)
 		} else {
 			c.RedirectWithURL("/user/login")
 		}
@@ -52,12 +51,10 @@ func (c *BaseController) RedirectWithURL(url string) {
 //用户
 
 func (c *BaseController) IsLogin() bool {
-	utils.JJKPrintln("=====get ",c.GetSession(SESSTION_KEY_USER))
 	return c.GetSession(SESSTION_KEY_USER) != nil
 }
 
 func (c *BaseController) SetLoginedUser(user models.User) {
-	utils.JJKPrintln("=====set ",user)
 	c.SetSession(SESSTION_KEY_USER,user)
 }
 
