@@ -9,14 +9,13 @@ import (
 	"github.com/cheneylew/shadowsocks-cms/models"
 )
 
-var o orm.Ormer
-
+var O orm.Ormer
 func init() {
 	url := dbUrl("cheneylew","12344321","47.91.151.207","3308","shadowsocks-servers")
 	utils.JJKPrintln(url)
 	orm.RegisterDriver("mysql", orm.DRMySQL)
 	err := orm.RegisterDataBase("default", "mysql", url)
-	o = orm.NewOrm()
+	O = orm.NewOrm()
 
 	if err != nil {
 		utils.JJKPrintln("========database can't connect! error:" + err.Error()+"========")
@@ -33,7 +32,7 @@ func dbUrl(user, password, host, port, dbName string) string {
 func DBQueryServers(ip string) []*models.Server {
 	var objects []*models.Server
 
-	qs := o.QueryTable("server")
+	qs := O.QueryTable("server")
 	_, err := qs.Filter("ip", ip).All(&objects)
 
 	if err != nil {
@@ -46,7 +45,7 @@ func DBQueryServers(ip string) []*models.Server {
 func DBQueryPortsWithSid(sid int64) []*models.Port {
 	var objects []*models.Port
 
-	qs := o.QueryTable("port")
+	qs := O.QueryTable("port")
 	_, err := qs.Filter("server__server_id", sid).RelatedSel().All(&objects)
 
 	if err != nil {
@@ -59,7 +58,7 @@ func DBQueryPortsWithSid(sid int64) []*models.Port {
 func DBQueryPortsWithUserId(userId int64) []*models.Port {
 	var objects []*models.Port
 
-	qs := o.QueryTable("port")
+	qs := O.QueryTable("port")
 	_, err := qs.Filter("user__user_id", userId).RelatedSel().All(&objects)
 
 	if err != nil {
@@ -72,7 +71,7 @@ func DBQueryPortsWithUserId(userId int64) []*models.Port {
 func DBQueryPortsWithIP(ip string) []*models.Port {
 	var objects []*models.Port
 
-	qs := o.QueryTable("port")
+	qs := O.QueryTable("port")
 	_, err := qs.Filter("server__ip", ip).RelatedSel().All(&objects)
 
 	if err != nil {
@@ -84,7 +83,7 @@ func DBQueryPortsWithIP(ip string) []*models.Port {
 
 func DBQueryUsersWithUid(uid int64) []*models.User {
 	var objects []*models.User
-	qs := o.QueryTable("user")
+	qs := O.QueryTable("user")
 	_, err := qs.Filter("user_id", uid).RelatedSel().All(&objects)
 
 	if err != nil {
@@ -96,7 +95,7 @@ func DBQueryUsersWithUid(uid int64) []*models.User {
 
 func DBQueryUserWithEmailOrMobile(emailOrMobile string) []models.User {
 	var objects []models.User
-	_, err := o.Raw(fmt.Sprintf("select * from user where email =? or mobile=?"),emailOrMobile, emailOrMobile).QueryRows(&objects)
+	_, err := O.Raw(fmt.Sprintf("select * from user where email =? or mobile=?"),emailOrMobile, emailOrMobile).QueryRows(&objects)
 	if err != nil {
 		utils.JJKPrintln(err)
 		return objects
@@ -131,8 +130,8 @@ func DBQueryMyListenPorts() []*models.Port {
 }
 
 func dbStart()  {
-	o = orm.NewOrm()
-	o.Using("default") // 默认使用 default，你可以指定为其他数据库
+	O = orm.NewOrm()
+	O.Using("default") // 默认使用 default，你可以指定为其他数据库
 
 
 }

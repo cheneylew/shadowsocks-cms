@@ -74,5 +74,30 @@ func (c *UserController) Home() {
 	c.Data["Ports"] = ports
 }
 
+func (c *UserController) Setting() {
+	c.TplName = "user_setting.html"
+
+	refer := c.GetString("refer")
+	comment := c.GetString("comment")
+	password := c.GetString("password")
+
+	if len(password) == 0 {
+		return
+	}
+
+	user := c.GetLoginedUser()
+	user.Refer = refer
+	user.Comment = comment
+	user.Password = password
+	n, err := database.O.Update(user,"Refer","Comment","Password")
+	if err != nil {
+		utils.JJKPrintln(err)
+	}
+	if n > 0 {
+		c.SetLoginedUser(*user)
+		c.Data["User"] = user
+	}
+}
+
 
 
