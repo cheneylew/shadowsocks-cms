@@ -42,6 +42,32 @@ func DBQueryServers(ip string) []*models.Server {
 	return objects
 }
 
+func DBQueryServersWithSid(sid int) *models.Server {
+	var objects []*models.Server
+
+	qs := O.QueryTable("server")
+	_, err := qs.Filter("server_id", sid).All(&objects)
+
+	if err == nil {
+		return objects[0]
+	}
+
+	return nil
+}
+
+func DBQueryServersAll() []*models.Server {
+	var objects []*models.Server
+
+	qs := O.QueryTable("server")
+	_, err := qs.RelatedSel().All(&objects)
+
+	if err != nil {
+		return objects
+	}
+
+	return objects
+}
+
 func DBQueryPortsWithSid(sid int64) []*models.Port {
 	var objects []*models.Port
 

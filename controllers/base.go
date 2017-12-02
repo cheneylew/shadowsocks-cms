@@ -5,6 +5,7 @@ import (
 	"github.com/cheneylew/shadowsocks-cms/conf"
 	"github.com/cheneylew/shadowsocks-cms/models"
 	"github.com/cheneylew/goutil/utils"
+	"strings"
 )
 
 const SESSTION_KEY_USER  = "LOGINED_USER"
@@ -36,6 +37,14 @@ func (c *BaseController) Prepare() {
 		}
 	}
 
+}
+
+func (c *BaseController) IsPost() bool {
+	return c.Ctx.Request.Method == "POST"
+}
+
+func (c *BaseController) IsGet() bool {
+	return c.Ctx.Request.Method == "GET"
 }
 
 func (c *BaseController) Finish() {
@@ -70,3 +79,24 @@ func (c *BaseController) GetLoginedUser() *models.User {
 
 	return nil
 }
+
+func (c *BaseController) Path(idx int) string {
+	path := c.Ctx.Request.URL.Path
+	results := strings.Split(strings.TrimPrefix(path,"/"), "/")
+	if idx < len(results) {
+		return results[idx]
+	}
+
+	return ""
+}
+
+func (c *BaseController) PathValue() string {
+	return c.Path(2)
+}
+
+func (c *BaseController) PathValueInt() int {
+	return utils.JKStrToInt(c.Path(2))
+}
+
+
+

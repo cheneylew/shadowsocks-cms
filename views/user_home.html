@@ -1,6 +1,12 @@
 <h3>用户中心</h3>
-<div>用户名：{{.User.Name}} <a href="/user/setting">设置</a> <a href="/user/logout">退出</a></div>
-
+<div>用户名：{{.User.Name}}
+    {{if .User.Isadmin}}
+    <a href="/admin/home">管理员</a>
+    {{end}}
+    <a href="/user/setting">设置</a>
+    <a href="/user/logout">退出</a></div>
+联系管理员：<br/>
+微信号：cheneylew  邮箱：<a href="mailto:cheneylew@163.com">cheneylew@163.com</a>
 <br/>
 您的服务器：<br/>
 <div class="table-responsive">

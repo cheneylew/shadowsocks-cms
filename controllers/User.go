@@ -77,13 +77,13 @@ func (c *UserController) Home() {
 func (c *UserController) Setting() {
 	c.TplName = "user_setting.html"
 
+	if c.IsGet() {
+		return
+	}
+
 	refer := c.GetString("refer")
 	comment := c.GetString("comment")
 	password := c.GetString("password")
-
-	if len(password) == 0 {
-		return
-	}
 
 	user := c.GetLoginedUser()
 	user.Refer = refer
