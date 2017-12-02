@@ -48,7 +48,7 @@ func DBQueryServersWithSid(sid int) *models.Server {
 	qs := O.QueryTable("server")
 	_, err := qs.Filter("server_id", sid).All(&objects)
 
-	if err == nil {
+	if err == nil && len(objects) > 0 {
 		return objects[0]
 	}
 
@@ -120,16 +120,16 @@ func DBQueryMaxPortWithIP(ip string) *models.Port {
 	return objects[0]
 }
 
-func DBQueryUsersWithUid(uid int64) []*models.User {
+func DBQueryUserWithUid(uid int64) *models.User {
 	var objects []*models.User
 	qs := O.QueryTable("user")
 	_, err := qs.Filter("user_id", uid).RelatedSel().All(&objects)
 
-	if err != nil {
-		return objects
+	if err != nil || len(objects) == 0 {
+		return nil
 	}
 
-	return objects
+	return objects[0]
 }
 
 func DBQueryUsersAll() []*models.User {

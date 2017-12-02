@@ -6,6 +6,7 @@ import (
 	"github.com/cheneylew/shadowsocks-cms/models"
 	"github.com/cheneylew/goutil/utils"
 	"strings"
+	"net/url"
 )
 
 const SESSTION_KEY_USER  = "LOGINED_USER"
@@ -46,6 +47,15 @@ func (c *BaseController) IsPost() bool {
 func (c *BaseController) IsGet() bool {
 	return c.Ctx.Request.Method == "GET"
 }
+
+func (c *BaseController) PostForm() url.Values {
+	return c.Ctx.Request.PostForm
+}
+
+func (c *BaseController) PostFormWithKey(key string) []string {
+	return c.Ctx.Request.PostForm[key]
+}
+
 
 func (c *BaseController) Finish() {
 	c.Controller.Finish()
