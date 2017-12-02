@@ -107,10 +107,35 @@ func DBQueryPortsWithIP(ip string) []*models.Port {
 	return objects
 }
 
+func DBQueryMaxPortWithIP(ip string) *models.Port {
+	var objects []*models.Port
+
+	qs := O.QueryTable("port")
+	_, err := qs.Filter("server__ip", ip).OrderBy("-port").All(&objects)
+
+	if err != nil {
+		return nil
+	}
+
+	return objects[0]
+}
+
 func DBQueryUsersWithUid(uid int64) []*models.User {
 	var objects []*models.User
 	qs := O.QueryTable("user")
 	_, err := qs.Filter("user_id", uid).RelatedSel().All(&objects)
+
+	if err != nil {
+		return objects
+	}
+
+	return objects
+}
+
+func DBQueryUsersAll() []*models.User {
+	var objects []*models.User
+	qs := O.QueryTable("user")
+	_, err := qs.OrderBy("-user_id").RelatedSel().All(&objects)
 
 	if err != nil {
 		return objects

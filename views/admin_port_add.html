@@ -1,0 +1,38 @@
+<h4>端口添加</h4>
+<h5>服务器IP:{{.Server.Ip}}</h5>
+<form method="post">
+    <div class="form-group">
+        <label for="user">用户</label>
+        <select class="form-control" id="user">
+            <option value="0">不选择任何用户</option>
+            {{range .Users}}
+            <option value="{{.User_id}}">{{.Name}}-{{.Mobile}}-{{.Email}}</option>
+            {{end}}
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="ptype">收费方式</label>
+        <select class="form-control" id="ptype">
+            <option value="0">包年包月</option>
+            <option value="1">包流量</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="port">端口号</label>
+        <input type="text" class="form-control" id="port" placeholder="端口号" value="{{.MaxPortNum}}">
+    </div>
+    <div class="form-group">
+        <label for="pwd">密码</label>
+        <input type="text" class="form-control" id="pwd" placeholder="填写密码" value="{{.RandomPwd}}">
+    </div>
+    <div class="form-group">
+        <label for="flowinmax">最大流入量</label>
+        <input type="text" class="form-control" id="flowinmax" placeholder="最大流入量">
+    </div>
+    <div class="form-group">
+        <label for="endtime">结束时间</label>
+        <input type="text" class="form-control" id="endtime" placeholder="结束时间">
+    </div>
+
+    <button type="submit" class="btn btn-default">提交</button>
+</form>
