@@ -6,6 +6,7 @@ import (
 	"github.com/cheneylew/shadowsocks-cms/models"
 	"github.com/jinzhu/now"
 	"fmt"
+	"time"
 )
 
 type AdminController struct {
@@ -80,6 +81,41 @@ func (c *AdminController) PortAdd() {
 			utils.JJKPrintln(e)
 		}
 
-		c.RedirectWithURL(fmt.Sprintf("/admin/portadd/%d", sid))
+		c.RedirectWithURL(fmt.Sprintf("/admin/ports/%d", sid))
+	}
+}
+
+func (c *AdminController) PortUpdate() {
+	c.TplName = "admin_port_update.html"
+	pid := c.PathValueInt()
+	if c.IsGet() {
+		port := database.DBQueryPortWithPid(pid)
+		c.Data["Port"] = port
+		c.Data["Users"] = database.DBQueryUsersAll()
+
+
+	} else {
+		endTime, _ := now.Parse(c.GetString("end_time"))
+		endTime = endTime.Add(time.Hour*8)
+		user := database.DBQueryUserWithUid(utils.JKStrToInt64(c.GetString("user_id")))
+
+		port := database.DBQueryPortWithPid(pid)
+		port.End_time = endTime
+		port.User = user
+		port.Ptype = utils.JKStrToUInt8(c.GetString("ptype"))
+		port.Port = c.GetString("port")
+		port.Password = c.GetString("password")
+		port.Flow_in_max = utils.ToFloat64(c.GetString("flow_in_max"))
+		port.Flow_in = utils.ToFloat64(c.GetString("flow_in"))
+
+		utils.JJKPrintln(endTime)
+
+		_, e := database.O.Update(port)
+
+		if e != nil {
+			utils.JJKPrintln(e)
+		}
+
+		c.RedirectWithURL(fmt.Sprintf("/admin/portupdate/%d", pid))
 	}
 }

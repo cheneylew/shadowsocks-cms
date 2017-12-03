@@ -59,7 +59,7 @@ func DBQueryServersAll() []*models.Server {
 	var objects []*models.Server
 
 	qs := O.QueryTable("server")
-	_, err := qs.RelatedSel().All(&objects)
+	_, err := qs.OrderBy("-server_id").RelatedSel().All(&objects)
 
 	if err != nil {
 		return objects
@@ -72,7 +72,7 @@ func DBQueryPortsWithSid(sid int64) []*models.Port {
 	var objects []*models.Port
 
 	qs := O.QueryTable("port")
-	_, err := qs.Filter("server__server_id", sid).RelatedSel().All(&objects)
+	_, err := qs.Filter("server__server_id", sid).OrderBy("-port_id").RelatedSel().All(&objects)
 
 	if err != nil {
 		return objects
@@ -113,11 +113,24 @@ func DBQueryMaxPortWithIP(ip string) *models.Port {
 	qs := O.QueryTable("port")
 	_, err := qs.Filter("server__ip", ip).OrderBy("-port").All(&objects)
 
-	if err != nil {
-		return nil
+	if err == nil && len(objects) > 0 {
+		return objects[0]
 	}
 
-	return objects[0]
+	return nil
+}
+
+func DBQueryPortWithPid(pid int) *models.Port {
+	var objects []*models.Port
+
+	qs := O.QueryTable("port")
+	_, err := qs.Filter("port_id", pid).RelatedSel().All(&objects)
+
+	if err == nil && len(objects) > 0 {
+		return objects[0]
+	}
+
+	return nil
 }
 
 func DBQueryUserWithUid(uid int64) *models.User {

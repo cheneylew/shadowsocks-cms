@@ -1,11 +1,11 @@
 <h4>端口添加</h4>
-<h5>服务器IP:{{.Server.Ip}}</h5>
-<form method="post" action="/admin/portadd/{{.Server.Server_id}}">
+<h5>服务器IP:{{.Port.Server.Ip}}</h5>
+<form method="post" action="/admin/portupdate/{{.Port.Port_id}}">
     <div class="form-group">
         <label for="user">用户</label>
         <select class="form-control" id="user" name="user_id">
             {{range .Users}}
-            {{if eq .Isadmin true}}
+            {{if eq $.Port.User.User_id .User_id}}
             <option value="{{.User_id}}" selected>{{.Name}}-{{.Mobile}}-{{.Email}}</option>
             {{else}}
             <option value="{{.User_id}}">{{.Name}}-{{.Mobile}}-{{.Email}}</option>
@@ -17,28 +17,37 @@
     <div class="form-group">
         <label for="ptype">收费方式</label>
         <select class="form-control" id="ptype" name="ptype">
-            <option value="0">包年包月</option>
+            {{if equal .Port.Ptype 0}}
+            <option value="0" selected>包年包月</option>
             <option value="1">包流量</option>
+            {{else}}
+            <option value="0">包年包月</option>
+            <option value="1" selected>包流量</option>
+            {{end}}
         </select>
     </div>
     <div class="form-group">
         <label for="port">端口号</label>
-        <input type="text" class="form-control" id="port" name="port" placeholder="端口号" value="{{.MaxPortNum}}">
+        <input type="text" class="form-control" id="port" name="port" placeholder="端口号" value="{{.Port.Port}}">
     </div>
     <div class="form-group">
         <label for="pwd">密码</label>
-        <input type="text" class="form-control" id="pwd" placeholder="填写密码" name="password" value="{{.RandomPwd}}">
+        <input type="text" class="form-control" id="pwd" placeholder="填写密码" name="password" value="{{.Port.Password}}">
     </div>
     <div class="form-group">
-        <label for="flowinmax">最大流入量</label>
+        <label for="flowin">已使用流量:{{.Port.Flow_in | flow}}</label>
+        <input type="text" class="form-control" id="flowin" placeholder="已使用流量" name="flow_in" value="{{fmt .Port.Flow_in "%.0f"}}">
+    </div>
+    <div class="form-group">
+        <label for="flowinmax">最大流入量Bytes 当前流量:{{.Port.Flow_in_max | flow}}</label>
         <button type="button" class="btn btn-default btn-xs" id="flowAdd100M">增加100M</button> <button type="button" class="btn btn-default btn-xs" id="flowAdd500M">增加500M</button> <button type="button" class="btn btn-default btn-xs" id="flowAdd1G">增加1G</button>
-        <input type="text" class="form-control" id="flowinmax" name="flow_in_max" value="0" placeholder="最大流入量">
+        <input type="text" class="form-control" id="flowinmax" name="flow_in_max" placeholder="最大流入量MB" value="{{fmt .Port.Flow_in_max "%.0f"}}">
     </div>
     <div class="form-group">
         <label for="endtime">结束时间</label>
         <button type="button" class="btn btn-default btn-xs" id="timeAdd1M">增加1个月</button> <button type="button" class="btn btn-default btn-xs" id="timeAdd6M">增加6个月</button> <button type="button" class="btn btn-default btn-xs" id="timeAdd1Y">增加1年</button>
         <button type="button" class="btn btn-default btn-xs" id="timeAdd1MNow">现在增加1个月</button> <button type="button" class="btn btn-default btn-xs" id="timeAdd6MNow">现在增加6个月</button> <button type="button" class="btn btn-default btn-xs" id="timeAdd1YNow">现在增加1年</button>
-        <input type="text" class="form-control" id="endtime" name="end_time" placeholder="结束时间" value="">
+        <input type="text" class="form-control" id="endtime" name="end_time" placeholder="结束时间" value="{{date .Port.End_time "Y-m-d H:i:s"}}">
     </div>
 
     <button type="submit" class="btn btn-default">提交</button>

@@ -14,6 +14,7 @@ var FILTER_PATHS  = make([]string, 0)
 
 func init() {
 	FILTER_PATHS = append(FILTER_PATHS,"/user/login")
+	FILTER_PATHS = append(FILTER_PATHS,"/user/regist")
 }
 
 type BaseController struct {

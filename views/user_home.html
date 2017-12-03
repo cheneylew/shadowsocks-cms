@@ -15,9 +15,19 @@
         <tr><td>
             计费方式:
             {{if compare .Ptype 1}}
-            按流量计费 <br/>用量: 已使用:{{.Flow_in | flow}} 最大值:{{.Flow_in_max | flow}} 剩余:{{.Flow_surplus | flow}}
+            按流量计费 <br/>用量: 已使用:{{.Flow_in | flow}} 最大值:{{.Flow_in_max | flow}}
+                {{if gt .Flow_surplus 0.0}}
+                <label style="background-color: aquamarine">剩余:{{.Flow_surplus | flow}}</label>
+                {{else}}
+                剩余:{{.Flow_surplus | flow}}
+                {{end}}
             {{else}}
-            包年包月 <br/>时间段: 开始:{{dateformat .Start_time "2006-01-02"}} 截止:{{dateformat .End_time "2006-01-02"}} 剩余:{{fmt .Days_surplus "%.2f"}}天
+            包年包月 <br/>时间段: 开始:{{dateformat .Start_time "2006-01-02"}} 截止:{{dateformat .End_time "2006-01-02"}}
+                {{if gt .Days_surplus 0.0}}
+                <label style="background-color: aquamarine">剩余:{{fmt .Days_surplus "%.2f"}}天</label>
+                {{else}}
+                剩余:{{fmt .Days_surplus "%.2f"}}天
+                {{end}}
             {{end}}
             <br/>
             IP:{{.Server.Ip}} <br/>

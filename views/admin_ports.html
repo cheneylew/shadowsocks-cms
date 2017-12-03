@@ -19,7 +19,7 @@
 <br/>
 用户名:{{.User.Name}} 手机号:{{.User.Mobile}} 邮箱:<a href="mailto:{{.User.Email}}">{{.User.Email}}</a>
 <br/>
-操作:<a href="/admin/ports">管理端口</a><br/>
+操作:<a href="/admin/portupdate/{{.Port_id}}">管理端口</a><br/>
 {{end}}
 {{else}}
 还没有端口开启

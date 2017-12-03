@@ -1,22 +1,24 @@
 <h3>新用户注册</h3>
-<form>
+<form method="post">
     <div class="form-group">
         <label for="email">邮箱地址</label>
-        <input type="email" class="form-control" id="email" placeholder="填写邮箱-email">
+        <input type="email" class="form-control" id="email" name="email" placeholder="填写邮箱-email">
     </div>
     <div class="form-group">
         <label for="mobile">手机号</label>
-        <input type="email" class="form-control" id="mobile" placeholder="填写手机-mobile">
+        <input type="text" class="form-control" id="mobile" name="mobile" placeholder="填写手机-mobile">
     </div>
     <div class="form-group">
         <label for="password">密码</label>
-        <input type="password" class="form-control" id="password" placeholder="填写密码-password">
+        <input type="password" class="form-control" id="password" name="password" placeholder="填写密码-password">
     </div>
-
     <div class="form-group">
         <label for="confirm_password">确认密码</label>
-        <input type="password" class="form-control" id="confirm_password" placeholder="填写确认密码-confirm_password">
+        <input type="password" class="form-control" id="confirm_password" name="confirm_password" placeholder="填写确认密码-confirm_password">
     </div>
-
-    <button type="submit" class="btn btn-default">提交</button>
+    <div class="form-group">
+        <label for="refer">推荐人</label>
+        <input type="text" class="form-control" id="refer" name="refer" placeholder="推荐人-refer-[选填]">
+    </div>
+    <button type="submit" class="btn btn-default">提交</button>   <a style="margin-left: 20px" href="/user/login">登录</a>
 </form>

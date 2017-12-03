@@ -50,6 +50,34 @@ func (c *UserController) Login() {
 
 func (c *UserController) Regist() {
 	c.TplName = "user_regist.html"
+
+	if c.IsGet() {
+		return
+	}
+
+	email := c.GetString("email")
+	mobile := c.GetString("mobile")
+	password := c.GetString("password")
+	confirm_password := c.GetString("confirm_password")
+	refer := c.GetString("refer")
+
+	if password != confirm_password || len(password) < 6 {
+		return
+	}
+
+	user := &models.User{
+		Name:mobile,
+		Email:email,
+		Mobile:mobile,
+		Password:password,
+		Refer:refer,
+		Isadmin:false,
+	}
+
+	n,e := database.O.Insert(user)
+	if e == nil && n > 0 {
+		c.RedirectWithURL("/user/login")
+	}
 }
 
 func (c *UserController) Logout() {
@@ -64,6 +92,10 @@ func (c *UserController) Home() {
 	ports := database.DBQueryPortsWithUserId(c.GetLoginedUser().User_id)
 	for i := 0; i < len(ports); i++ {
 		ports[i].Flow_surplus = ports[i].Flow_in_max - ports[i].Flow_in
+		if ports[i].Flow_surplus < 0 {
+			ports[i].Flow_surplus = 0
+		}
+
 		days := float64(ports[i].End_time.UTC().Unix()-time.Now().UTC().Unix())/(float64(24*60*60))
 		if days > 0 {
 			ports[i].Days_surplus = days
