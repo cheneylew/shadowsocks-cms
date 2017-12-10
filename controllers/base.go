@@ -1,15 +1,12 @@
 package controllers
 
 import (
-	"github.com/astaxie/beego"
 	"github.com/cheneylew/shadowsocks-cms/conf"
-	"github.com/cheneylew/shadowsocks-cms/models"
 	"github.com/cheneylew/goutil/utils"
-	"strings"
-	"net/url"
+	beego2 "github.com/cheneylew/goutil/utils/beego"
+	"github.com/cheneylew/shadowsocks-cms/models"
 )
 
-const SESSTION_KEY_USER  = "LOGINED_USER"
 var FILTER_PATHS  = make([]string, 0)
 
 func init() {
@@ -18,7 +15,7 @@ func init() {
 }
 
 type BaseController struct {
-	beego.Controller
+	beego2.BBaseController
 }
 
 func (c *BaseController) Prepare() {
@@ -32,8 +29,7 @@ func (c *BaseController) Prepare() {
 
 	if !utils.Contain(FILTER_PATHS, urlPath) {
 		if c.IsLogin() {
-			user := c.GetLoginedUser()
-			c.Data["User"] = user
+			c.Data["User"] = c.GetUser()
 		} else {
 			c.RedirectWithURL("/user/login")
 		}
@@ -41,73 +37,13 @@ func (c *BaseController) Prepare() {
 
 }
 
-func (c *BaseController) IsPost() bool {
-	return c.Ctx.Request.Method == "POST"
-}
-
-func (c *BaseController) IsGet() bool {
-	return c.Ctx.Request.Method == "GET"
-}
-
-func (c *BaseController) PostForm() url.Values {
-	return c.Ctx.Request.PostForm
-}
-
-func (c *BaseController) PostFormWithKey(key string) []string {
-	return c.Ctx.Request.PostForm[key]
-}
-
-
-func (c *BaseController) Finish() {
-	c.Controller.Finish()
-}
-
-//通用
-
-func (c *BaseController) RedirectWithURL(url string) {
-	c.Redirect(url, 302)
-}
-
-//用户
-
-func (c *BaseController) IsLogin() bool {
-	return c.GetSession(SESSTION_KEY_USER) != nil
-}
-
-func (c *BaseController) SetLoginedUser(user models.User) {
-	c.SetSession(SESSTION_KEY_USER,user)
-}
-
-func (c *BaseController) SetUserLogout() {
-	c.SetSession(SESSTION_KEY_USER,nil)
-}
-
 func (c *BaseController) GetLoginedUser() *models.User {
-	v, b := c.GetSession(SESSTION_KEY_USER).(models.User)
-	if b {
-		return &v
+	v, ok := c.GetUser().(*models.User)
+	if ok {
+		return v
 	}
 
 	return nil
 }
-
-func (c *BaseController) Path(idx int) string {
-	path := c.Ctx.Request.URL.Path
-	results := strings.Split(strings.TrimPrefix(path,"/"), "/")
-	if idx < len(results) {
-		return results[idx]
-	}
-
-	return ""
-}
-
-func (c *BaseController) PathValue() string {
-	return c.Path(2)
-}
-
-func (c *BaseController) PathValueInt() int {
-	return utils.JKStrToInt(c.Path(2))
-}
-
 
 

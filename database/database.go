@@ -7,11 +7,13 @@ import (
 	"fmt"
 	"time"
 	"github.com/cheneylew/shadowsocks-cms/models"
+	"github.com/cheneylew/goutil/utils/beego"
 )
 
 var O orm.Ormer
 func init() {
-	url := dbUrl("cheneylew","12344321","47.91.151.207","3308","shadowsocks-servers")
+
+	url := beego.DBUrl("cheneylew","12344321","47.91.151.207","3308","shadowsocks-servers")
 	utils.JJKPrintln(url)
 	orm.RegisterDriver("mysql", orm.DRMySQL)
 	err := orm.RegisterDataBase("default", "mysql", url)
@@ -23,10 +25,6 @@ func init() {
 		utils.JJKPrintln("========database connected success！========")
 	}
 
-}
-
-func dbUrl(user, password, host, port, dbName string) string {
-	return fmt.Sprintf(`%s:%s@tcp(%s:%s)/%s?charset=utf8`, user, password, host, port, dbName)
 }
 
 func DBQueryServers(ip string) []*models.Server {

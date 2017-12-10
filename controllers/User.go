@@ -42,7 +42,7 @@ func (c *UserController) Login() {
 		}
 
 		if isLogin {
-			c.SetLoginedUser(loginedUser)
+			c.SaveUser(&loginedUser)
 			c.RedirectWithURL("/user/home")
 		}
 	}
@@ -81,7 +81,7 @@ func (c *UserController) Regist() {
 }
 
 func (c *UserController) Logout() {
-	c.SetUserLogout()
+	c.Logout()
 	c.RedirectWithURL("/user/login")
 }
 
@@ -126,7 +126,7 @@ func (c *UserController) Setting() {
 		utils.JJKPrintln(err)
 	}
 	if n > 0 {
-		c.SetLoginedUser(*user)
+		c.SaveUser(*user)
 		c.Data["User"] = user
 	}
 }
